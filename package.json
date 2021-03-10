@@ -1,0 +1,26 @@
+{
+  "name": "poetry-payments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sameerdewan/poetry-payments.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sameerdewan/poetry-payments/issues"
+  },
+  "homepage": "https://github.com/sameerdewan/poetry-payments#readme",
+  "dependencies": {
+    "stripe": "^8.138.0",
+    "express": "4.17.1",
+    "express-openapi-validator": "4.12.4",
+    "mongoose": "5.11.15",
+    "mongoose-type-email": "1.1.2"
+  }
+}
