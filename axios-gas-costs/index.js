@@ -14,15 +14,6 @@ async function matic() {
     return gasPriceAverageInEth * ethUSD;
 }
 
-async function ethereum() {
-    const ethereumResponse = await axios.get(process.env.ETHEREUM_URL);
-    const gasPriceAverageInWei = ethereumResponse.data.average;
-    const gasPriceAverageInEth = Web3.utils.toWei(gasPriceAverageInWei, 'ether');
-    const ethUSD = await getETH_USD();
-    return gasPriceAverageInEth * ethUSD;
-}
-
 module.exports = {
-    matic,
-    ethereum
+    matic
 }
