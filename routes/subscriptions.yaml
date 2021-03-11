@@ -1,0 +1,93 @@
+openapi: 3.0.0
+info:
+  title: Subscriptions
+  description: Route for logging into poetry
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+    description: Development server URL
+
+paths:
+  /api/subscriptions/stripe-webhook:
+    post:
+      summary: Webhook for Stripe
+    responses:
+      '200':
+        description: 'Successful Webhook call'
+      '400':
+        description: 'Failed Webhook call'
+      '500':
+        description: 'Failed Webhook call - unexpected event type'
+
+  /api/subscriptions/create-subscription:
+    post:
+      summary: Create a customer subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - paymentMethodId
+                - customerId
+                - productId
+              properties:
+                paymentMethodId:
+                  type: string
+                customerId:
+                  type: string
+                productId:
+                  type: string
+      responses:
+        '200':
+          description: Successfully created subscription
+        '402':
+          description: Failed to create subscription
+
+  /api/subscriptions/retry-invoice:
+    post:
+      summary: Retry a failed invoice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - paymentMethodId
+                - customerId
+                - invoiceId
+              properties:
+                paymentMethodId:
+                  type: string
+                customerId:
+                  type: string
+                invoiceId:
+                  type: string
+      responses:
+        '200':
+          description: Successfully retried invoice
+        '402':
+          description: Invoice retry failed
+
+  /api/subscriptions/cancel-subscription:
+    post:
+      summary: Cancel a user subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - subscriptionId
+              properties:
+                subscriptionId:
+                  type: string
+      responses:
+        '200':
+          description: Successfully cancelled subscription
+        '500':
+          description: System failed to cancel subscription

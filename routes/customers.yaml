@@ -1,0 +1,19 @@
+openapi: 3.0.0
+info:
+  title: Customers
+  description: Route for creating a customer
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+    description: Development server URL
+
+paths:
+  /api/customers:
+    post:
+      summary: Create a Stripe customer
+      responses:
+        '200':
+          description: Successful Stripe customer creation
+        '400':
+          description: Failure to create Stripe customer

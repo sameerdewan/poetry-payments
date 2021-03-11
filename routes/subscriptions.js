@@ -1,9 +1,18 @@
 const router = require('express').Router();
 const stripe = require('stripe')(process.env.STRIPE_KEY);
+const OpenApiValidator = require('express-openapi-validator');
 const PoetrySystemJWT = require('../jwt');
 const User = require('../db/models/User');
 
+const apiSpec = path.join(__dirname, 'subscriptions.yaml');
 const poetryJwt = new PoetrySystemJWT();
+
+router.use(
+    OpenApiValidator.middleware({
+        apiSpec,
+        validateRequests: true,
+    })
+);
 
 router.post('/stripe-webhook', async (req, res) => {
     try {
