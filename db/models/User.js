@@ -39,11 +39,10 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.createCustomer = async function(stripeToken) {
-    const stripeObj = {
+    const customer = await stripe.customers.create({
         email: this.email,
         source: stripeToken
-    };
-    const customer = await stripe.customers.create(stripeObj);
+    });
     await mongoose.model('User').findOneAndUpdate(
         { username: this.username },
         { $set: { customerId: customer.id } }
