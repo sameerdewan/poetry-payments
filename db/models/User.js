@@ -50,14 +50,19 @@ userSchema.methods.createCustomer = async function(stripeToken) {
     ).exec();
 }
 
-userSchema.methods.chargeCustomer = async function({ description, amount, statementMsg }) {
+userSchema.methods.chargeCustomer = async function({ description, amount, statement_descriptor_suffix }) {
     const charge = await stripe.charges.create({
         amount,
         description,
-        statement_descriptor_suffix: statementMsg,
+        statement_descriptor_suffix,
         currency: 'usd',
         customer: this.customerId,
         receipt_email: this.email,
+        metadata: {
+            username: this.username,
+            email: this.email,
+            customerId: this.customerId
+        }
     });
     await mongoose.model('User').findOneAndUpdate(
         { username: this.username, customId: this.customerId },
