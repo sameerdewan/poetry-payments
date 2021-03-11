@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Subscriptions
-  description: Route for logging into poetry
+  description: Manage user subscriptions
   version: 1.0.0
 
 servers:
