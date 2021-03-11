@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const PoetrySystemJWT = require('../jwt');
+const Invoice = require('../db/models/Invoice');
 
 const apiSpec = path.join(__dirname, 'paymentGateway.yaml');
 const poetryJWT = new PoetrySystemJWT();
@@ -11,6 +12,8 @@ router.use(
     })
 );
 
-
+router.post('/create', poetryJWT.middleware, async (req, res) => {
+    
+});
 
 module.exports = router;
