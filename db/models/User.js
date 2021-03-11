@@ -56,6 +56,7 @@ userSchema.methods.createCustomer = async function() {
         { username: this.username, email: this.email },
         { $set: { customerId: customer.id } }
     ).exec();
+    return customer.id;
 }
 
 userSchema.methods.retrieveCustomer = async function() {
