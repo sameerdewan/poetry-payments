@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const PoetrySystemJWT = require('../jwt');
-const Invoice = require('../db/models/Invoice');
 
-const apiSpec = path.join(__dirname, 'paymentGateway.yaml');
+const apiSpec = path.join(__dirname, 'customers.yaml');
 const poetryJWT = new PoetrySystemJWT();
 
 router.use(
@@ -14,7 +13,7 @@ router.use(
 
 router.post('/create', poetryJWT.middleware, async (req, res) => {
     try {
-        const { username } = req.jwt.username;
+        const { username } = req.jwt;
 
     } catch (error) {
 

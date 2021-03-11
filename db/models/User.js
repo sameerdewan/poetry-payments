@@ -27,8 +27,46 @@ const userSchema = new mongoose.Schema({
     validationCode: {
         type: mongoose.SchemaTypes.String,
         required: true
+    },
+    customerId: {
+        type: mongoose.SchemaTypes.String,
+        default: null
+    },
+    subscription: {
+        type: mongoose.SchemaTypes.String,
+        enum: [null, 'Basic', 'Professional', 'Business', 'Unlimited'],
+        default: null
+    },
+    monthToDatePings: {
+        type: mongoose.SchemaTypes.Number,
+        default: 0
     }
 });
+
+userSchema.methods.createCustomer = async function() {
+    const customer = await stripe.customers.create({
+        email: this.email,
+        name: this.username,
+        metadata: {
+            username: this.username,
+            email: this.email
+        }
+    });
+    await mongoose.model('User').findOneAndUpdate(
+        { username: this.username, email: this.email },
+        { $set: { customerId: customer.id } }
+    ).exec();
+}
+
+userSchema.methods.retrieveCustomer = async function() {
+    const customer = await stripe.customers.retrieve(this.customerId);
+    return customer;
+}
+
+userSchema.methods.deleteCustomer = async function() {
+    const deleted = await stripe.customers.del(this.customerId);
+    return deleted;
+}
 
 const User = mongoose.model('User', userSchema);
 
