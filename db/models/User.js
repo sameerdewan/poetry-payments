@@ -69,6 +69,22 @@ userSchema.methods.deleteCustomer = async function() {
     return deleted;
 }
 
+userSchema.methods.setSubscriptionNull = async function() {
+    await mongoose.model('User').findOneAndUpdate(
+        { username: this.username, email: this.email },
+        { $set: { subscription: null } }
+    ).exec();
+}
+
+userSchema.methods.setSubscription = async function(dataObject) {
+    const productId = dataObject.items.data[0].price.product;
+    const product = await stripe.products.retrieve(productId);
+    await mongoose.model('User').findOneAndUpdate(
+        { username: this.username, email: this.email },
+        { $set: { subscription: product.name } }
+    ).exec();
+}
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
