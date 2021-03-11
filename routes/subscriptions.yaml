@@ -12,13 +12,13 @@ paths:
   /api/subscriptions/stripe-webhook:
     post:
       summary: Webhook for Stripe
-    responses:
-      '200':
-        description: 'Successful Webhook call'
-      '400':
-        description: 'Failed Webhook call'
-      '500':
-        description: 'Failed Webhook call - unexpected event type'
+      responses:
+        '200':
+          description: 'Successful Webhook call'
+        '400':
+          description: 'Failed Webhook call'
+        '500':
+          description: 'Failed Webhook call - unexpected event type'
 
   /api/subscriptions/create-subscription:
     post:

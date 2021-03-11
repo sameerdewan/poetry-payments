@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const OpenApiValidator = require('express-openapi-validator');
+const path = require('path');
 const PoetrySystemJWT = require('../jwt');
 const User = require('../db/models/User');
 
