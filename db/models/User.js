@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema({
         enum: [null, 'Basic', 'Professional', 'Business', 'Unlimited'],
         default: null
     },
+    subscriptionId: {
+        type: mongoose.SchemaTypes.String,
+        default: null
+    },
     monthToDatePings: {
         type: mongoose.SchemaTypes.Number,
         default: 0
@@ -72,7 +76,7 @@ userSchema.methods.deleteCustomer = async function() {
 userSchema.methods.setSubscriptionNull = async function() {
     await mongoose.model('User').findOneAndUpdate(
         { username: this.username, email: this.email },
-        { $set: { subscription: null } }
+        { $set: { subscription: null, subscriptionId: null } }
     ).exec();
 }
 
@@ -81,7 +85,7 @@ userSchema.methods.setSubscription = async function(dataObject) {
     const product = await stripe.products.retrieve(productId);
     await mongoose.model('User').findOneAndUpdate(
         { username: this.username, email: this.email },
-        { $set: { subscription: product.name } }
+        { $set: { subscription: product.name, subscriptionId: dataObject.id } }
     ).exec();
 }
 
