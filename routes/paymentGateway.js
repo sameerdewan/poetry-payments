@@ -13,7 +13,12 @@ router.use(
 );
 
 router.post('/create', poetryJWT.middleware, async (req, res) => {
-    
+    try {
+        const { username } = req.jwt.username;
+
+    } catch (error) {
+
+    }
 });
 
 module.exports = router;
