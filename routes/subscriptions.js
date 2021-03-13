@@ -4,6 +4,7 @@ const OpenApiValidator = require('express-openapi-validator');
 const path = require('path');
 const PoetrySystemJWT = require('../jwt');
 const User = require('../db/models/User');
+const fs = require('fs');
 
 const apiSpec = path.join(__dirname, 'subscriptions.yaml');
 const poetryJwt = new PoetrySystemJWT();
@@ -17,15 +18,32 @@ router.use(
 
 router.post('/stripe-webhook', async (req, res) => {
     try {
-        const event = stripe.webhooks.constructEvent(
-            req.body,
-            req.headers['stripe-signature'],
-            process.env.STRIPE_WEBHOOK_SECRET
-        );
+        let event;
+        if (process.env.ENV === 'DEVELOPMENT') {
+            event = stripe.webhooks.constructEvent(
+                JSON.stringify(req.body, null, 2),
+                stripe.webhooks.generateTestHeaderString({
+                    payload: JSON.stringify(req.body, null, 2),
+                    secret: process.env.STRIPE_WEBHOOK_SECRET
+                }),
+                process.env.STRIPE_WEBHOOK_SECRET
+            );
+        } else if (process.env.ENV === 'PRODUCTION') {
+            event = stripe.webhooks.constructEvent(
+                req.body,
+                req.headers['stripe-signature'],
+                process.env.STRIPE_WEBHOOK_SECRET
+            );
+        } else {
+            throw new Error('env not set up correctly');
+        }
         const dataObject = event.data.object;
-        const user = User.findOne({ customerId: dataObject.metadata.customer }).exec();
+        const user = await User.findOne({ customerId: dataObject.customer }).exec();
+        if (!user) {
+            res.sendStatus(404);
+        }
         switch (event.type) {
-            case 'invoice.paid':
+            case 'customer.subscription.created':
                 await user.setSubscription(dataObject);
                 break;
             case 'invoice.payment_failed':
@@ -35,10 +53,11 @@ router.post('/stripe-webhook', async (req, res) => {
                 await user.deleteCustomer();
                 break;
             default:
-                res.status(500).json({ eventType: event.type });
+                break;
         }
         res.sendStatus(200);
     } catch (error) {
+        console.log({error})
         return res.sendStatus(400);
     }
 });

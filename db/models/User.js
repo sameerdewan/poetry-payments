@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 require('mongoose-type-email');
-const stripe = require('stripe')(process.env.STRIPE_KEY);
+const stripe = require('stripe')(process.env.STRIPE_API_KEY);
 
 const userSchema = new mongoose.Schema({
     username: {
