@@ -9,7 +9,7 @@ servers:
     description: Development server URL
 
 paths:
-  /api/customers:
+  /api/customers/create:
     post:
       summary: Create a Stripe customer
       responses:
